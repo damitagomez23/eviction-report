@@ -1,0 +1,26 @@
+---
+title: "Evictions Report"
+author: "Damita Gomez"
+date: "2/7/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library("knitr")
+knitr::opts_chunk$set(echo = FALSE)
+source("analysis.R")
+```
+
+This report focuses on evictions in San Fran.
+
+## Zip code analysis
+
+```{r}
+kable(by_zip, col.names = c("Zip Code", "Number of Evictions"))
+```
+
+## Time Series Analysis
+
+```{r echo = FALSE}
+month_plot
+```

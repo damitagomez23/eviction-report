@@ -24,3 +24,9 @@ kable(by_zip, col.names = c("Zip Code", "Number of Evictions"))
 ```{r echo = FALSE}
 month_plot
 ```
+
+## Evictions Plot in 2017
+
+```{r, warning=FALSE}
+evictions_plot
+```

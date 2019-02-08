@@ -16,10 +16,10 @@ num_evictions <- nrow(evictions)
 # Create a table (data frame) of evictions by zip code (sort descending)
 by_zip <- evictions %>% 
   group_by(Eviction.Notice.Source.Zipcode) %>% 
-  count() %>% 
-  arrange(-n) %>% 
+  count(sort = TRUE) %>% 
+  rename(n_evictions = n) %>% 
   ungroup() %>% 
-  top_n(10, wt = n)
+  top_n(10, wt = n_evictions)
 
 # Create a plot of the number of evictions each month in the dataset
 by_month <- evictions %>% 
@@ -36,9 +36,21 @@ month_plot <- ggplot(data = by_month) +
 
 # Map evictions in 2017 
 
-
 # Format the lat/long variables, filter to 2017
+evictions_2017 <- evictions %>%
+  mutate(date = as.Date(File.Date, format = "%m/%d/%y")) %>% 
+  filter(format(date, "%Y") == "2017") %>% 
+  separate(Location, c("lat", "long"), ", ") %>% 
+  mutate(lat = as.numeric(gsub("\\(", "", lat)),
+         long = as.numeric(gsub("\\)", "", long)))
 
 # Create a maptile background
+map_plot <- qmplot(data = evictions_2017, x = long, y = lat, geom = "blank",
+                   maptype = "toner-background", darken = .7,
+                   legend = "topleft")
 
 # Add a layer of points on top of the map tiles
+evictions_plot <- map_plot +
+  geom_point(mapping = aes(x = long, y = lat), color = "green", alpha = .3) +
+  labs(title = "Evictions in SF in 2017") +
+  theme(plot.margin = margin(.3, 0, 0, 0, "cm"))
